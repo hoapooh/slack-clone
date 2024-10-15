@@ -10,6 +10,7 @@ import { Separator } from "@radix-ui/react-separator"
 import { SignInFlow } from "../types"
 import { useState } from "react"
 import { TriangleAlert } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface SignInCardProps {
 	setState: (state: SignInFlow) => void
@@ -17,6 +18,7 @@ interface SignInCardProps {
 
 export const SignInCard = ({ setState }: SignInCardProps) => {
 	const { signIn } = useAuthActions()
+	const router = useRouter()
 
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
@@ -28,6 +30,10 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 
 		setPending(true)
 		signIn("password", { email, password, flow: "signIn" })
+			.then(() => {
+				// Redirect after successful sign-in
+				router.push("/")
+			})
 			.catch(() => {
 				setError("Invalid email or password")
 			})
