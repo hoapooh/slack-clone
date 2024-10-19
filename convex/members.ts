@@ -3,7 +3,7 @@ import { query } from "./_generated/server"
 
 import { getAuthUserId } from "@convex-dev/auth/server"
 
-// Try not to throw error when using query, only when using mutation
+// HACK: Try not to throw error when using query, only when using mutation
 export const current = query({
 	args: { workspaceId: v.id("workspaces") },
 	handler: async (ctx, args) => {
