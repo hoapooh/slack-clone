@@ -1,7 +1,9 @@
 "use client"
 
-import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal"
 import { useEffect, useState } from "react"
+
+import { CreateChannelModal } from "@/features/channels/components/create-channel-modal"
+import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal"
 
 // Ensuring all modals that we added will only show up in the client side rendering
 export const Modals = () => {
@@ -18,6 +20,7 @@ export const Modals = () => {
 
 	return (
 		<>
+			<CreateChannelModal />
 			<CreateWorkspaceModal />
 		</>
 	)

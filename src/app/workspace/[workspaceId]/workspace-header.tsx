@@ -56,7 +56,7 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) =>
 								<DropdownMenuSeparator />
 
 								<DropdownMenuItem className="cursor-pointer py-2" onClick={() => {}}>
-									Invite prople to {workspace.name}
+									Invite people to {workspace.name}
 								</DropdownMenuItem>
 
 								<DropdownMenuSeparator />
