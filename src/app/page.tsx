@@ -16,6 +16,7 @@ export default function Home() {
 
 	const workspaceId = useMemo(() => data?.[0]?._id, [data])
 
+	// NOTE: we force the workspace modal to open if there are no workspaces
 	useEffect(() => {
 		if (isLoading) return
 

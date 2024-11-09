@@ -117,9 +117,6 @@ export const create = mutation({
 			workspaceId,
 		})
 
-		// Get a workspace by ID
-		// const workspace = await ctx.db.get(workspaceId)
-
 		return workspaceId
 	},
 })
