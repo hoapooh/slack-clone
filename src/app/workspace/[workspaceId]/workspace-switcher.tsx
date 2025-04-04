@@ -4,26 +4,26 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Loader, Plus } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Loader, Plus } from "lucide-react";
 
-import { useRouter } from "next/navigation"
-import { useWorkspaceId } from "@/hooks/use-workspace-id"
-import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace"
-import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces"
-import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal"
+import { useRouter } from "next/navigation";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
+import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
+import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 
 export const WorkspaceSwitcher = () => {
-	const router = useRouter()
-	const workspaceId = useWorkspaceId()
+	const router = useRouter();
+	const workspaceId = useWorkspaceId();
 	// Add _ before open to say that we are not using it, we just need it to fill the empty space
-	const [_open, setOpen] = useCreateWorkspaceModal()
+	const [_open, setOpen] = useCreateWorkspaceModal();
 
-	const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({ id: workspaceId })
-	const { data: workspaces, isLoading: workspacesLoading } = useGetWorkspaces()
+	const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({ id: workspaceId });
+	const { data: workspaces, isLoading: workspacesLoading } = useGetWorkspaces();
 
-	const filteredWorkspaces = workspaces?.filter((workspace) => workspace?._id !== workspaceId)
+	const filteredWorkspaces = workspaces?.filter((workspace) => workspace?._id !== workspaceId);
 
 	return (
 		<DropdownMenu>
@@ -70,5 +70,5 @@ export const WorkspaceSwitcher = () => {
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
-	)
-}
+	);
+};
