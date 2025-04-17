@@ -1,27 +1,27 @@
-import { Button } from "@/components/ui/button"
-import { ChevronDown, ListFilter, SquarePen } from "lucide-react"
-import { Hint } from "@/components/hint"
+import { Hint } from "@/components/hint";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ListFilter, SquarePen } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import { useState } from "react"
-import { InviteModal } from "./invite-modal"
-import { PreferencesModal } from "./preferences-modal"
-import { Doc } from "../../../../convex/_generated/dataModel"
+import { useState } from "react";
+import { InviteModal } from "./invite-modal";
+import { PreferencesModal } from "./preferences-modal";
+import { Doc } from "../../../../convex/_generated/dataModel";
 
 interface WorkspaceHeaderProps {
-	workspace: Doc<"workspaces">
-	isAdmin: boolean
+	workspace: Doc<"workspaces">;
+	isAdmin: boolean;
 }
 
 export const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
-	const [inviteOpen, setInviteOpen] = useState(false)
-	const [preferencesOpen, setPreferencesOpen] = useState(false)
+	const [inviteOpen, setInviteOpen] = useState(false);
+	const [preferencesOpen, setPreferencesOpen] = useState(false);
 
 	return (
 		<>
@@ -97,5 +97,5 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) =>
 				</div>
 			</div>
 		</>
-	)
-}
+	);
+};

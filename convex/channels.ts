@@ -1,6 +1,80 @@
-import { v } from "convex/values"
-import { mutation, query } from "./_generated/server"
-import { getAuthUserId } from "@convex-dev/auth/server"
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
+
+export const remove = mutation({
+	args: {
+		channelId: v.id("channels"),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized");
+		}
+
+		const channel = await ctx.db.get(args.channelId);
+
+		if (!channel) {
+			return null;
+		}
+
+		const member = await ctx.db
+			.query("members")
+			.withIndex("by_workspace_id_user_id", (q) =>
+				q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
+			)
+			.unique();
+
+		if (!member || member.role !== "admin") {
+			throw new Error("Unauthorized");
+		}
+
+		// TODO: Remove all messages in the channel
+		// await ctx.db.delete("messages", (q) => q.eq("channelId", args.channelId));
+
+		await ctx.db.delete(args.channelId);
+
+		return args.channelId;
+	},
+});
+
+export const update = mutation({
+	args: {
+		channelId: v.id("channels"),
+		name: v.string(),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized");
+		}
+
+		const channel = await ctx.db.get(args.channelId);
+
+		if (!channel) {
+			return null;
+		}
+
+		const member = await ctx.db
+			.query("members")
+			.withIndex("by_workspace_id_user_id", (q) =>
+				q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
+			)
+			.unique();
+
+		if (!member || member.role !== "admin") {
+			throw new Error("Unauthorized");
+		}
+
+		await ctx.db.patch(args.channelId, {
+			name: args.name,
+		});
+
+		return args.channelId;
+	},
+});
 
 export const create = mutation({
 	args: {
@@ -8,10 +82,10 @@ export const create = mutation({
 		workspaceId: v.id("workspaces"),
 	},
 	handler: async (ctx, args) => {
-		const userId = await getAuthUserId(ctx)
+		const userId = await getAuthUserId(ctx);
 
 		if (!userId) {
-			throw new Error("Unauthorized")
+			throw new Error("Unauthorized");
 		}
 
 		const member = await ctx.db
@@ -19,22 +93,54 @@ export const create = mutation({
 			.withIndex("by_workspace_id_user_id", (q) =>
 				q.eq("workspaceId", args.workspaceId).eq("userId", userId)
 			)
-			.unique()
+			.unique();
 
 		if (!member || member.role !== "admin") {
-			throw new Error("Unauthorized")
+			throw new Error("Unauthorized");
 		}
 
-		const parsedName = args.name.replace(/\s+/g, "-").toLowerCase()
+		const parsedName = args.name.replace(/\s+/g, "-").toLowerCase();
 
 		const channelId = await ctx.db.insert("channels", {
 			name: parsedName,
 			workspaceId: args.workspaceId,
-		})
+		});
 
-		return channelId
+		return channelId;
 	},
-})
+});
+
+export const getById = query({
+	args: {
+		channelId: v.id("channels"),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			return null;
+		}
+
+		const channel = await ctx.db.get(args.channelId);
+
+		if (!channel) {
+			return null;
+		}
+
+		const member = await ctx.db
+			.query("members")
+			.withIndex("by_workspace_id_user_id", (q) =>
+				q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
+			)
+			.unique();
+
+		if (!member) {
+			return null;
+		}
+
+		return channel;
+	},
+});
 
 // HACK: Try not to throw error when using query, only when using mutation
 export const get = query({
@@ -42,10 +148,10 @@ export const get = query({
 		workspaceId: v.id("workspaces"),
 	},
 	handler: async (ctx, args) => {
-		const userId = await getAuthUserId(ctx)
+		const userId = await getAuthUserId(ctx);
 
 		if (!userId) {
-			return []
+			return [];
 		}
 
 		const member = await ctx.db
@@ -53,15 +159,15 @@ export const get = query({
 			.withIndex("by_workspace_id_user_id", (q) =>
 				q.eq("workspaceId", args.workspaceId).eq("userId", userId)
 			)
-			.unique()
+			.unique();
 
-		if (!member) return []
+		if (!member) return [];
 
 		const channels = await ctx.db
 			.query("channels")
 			.withIndex("by_workspace_id", (q) => q.eq("workspaceId", args.workspaceId))
-			.collect()
+			.collect();
 
-		return channels
+		return channels;
 	},
-})
+});
